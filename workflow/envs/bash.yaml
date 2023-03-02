@@ -1,0 +1,6 @@
+channels:
+  - bioconda
+  - conda-forge
+  - anaconda
+dependencies:
+  - kallisto=0.46.2

@@ -1,0 +1,61 @@
+$schema: "http://json-schema.org/draft-04/schema#"
+
+description: snakemake configuration file
+
+type: object
+
+properties:
+
+  samples:
+    type: string
+  units:
+    type: string
+
+  resources:
+    type: object
+    properties:
+      ctat_path:
+        type: string
+    required:
+      - ctat_path
+
+  paths:
+    type: object
+    properties:
+      workdir:
+        type: string
+      results_dir:
+        type: string
+      tmp_dir:
+        type: string
+    required:
+      - workdir
+      - results_dir
+      - tmp_dir
+
+  params:
+    type: object
+    properties:
+      trim_galore:
+        type: object
+        properties:
+          arguments:
+            type: string
+        required:
+          - arguments
+    required:
+      - trim_galore
+
+  docker:
+    type: object
+    properties:
+      ctat:
+        type: string
+
+required:
+  - samples
+  - units
+  - resources
+  - paths
+  - params
+  - docker

@@ -1,0 +1,34 @@
+from snakemake.utils import min_version
+
+##### set minimum snakemake version #####
+min_version("7.18.1")
+
+
+##### setup report #####
+configfile: "config/config.yaml"
+
+
+##### load rules #####
+include: "rules/common.smk"
+include: "rules/trimming.smk"
+include: "rules/variant_calling.smk"
+
+
+##### local rules #####
+localrules:
+    all
+
+##### target rules #####
+rule all:
+    input:
+        expand(
+            resolve_results_filepath(
+                config.get("paths").get("results_dir"),
+                "variant_calling/{sample.sample}/{sample.sample}.vcf.gz",
+            ),
+            sample=samples.reset_index().itertuples(),
+        )
+    threads: conservative_cpu_count(reserve_cores=2,max_cores=99)
+    resources:
+        tmpdir=config.get("paths").get("tmp_dir")
+    message: "Concluding the workflow!"
