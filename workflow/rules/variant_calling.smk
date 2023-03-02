@@ -31,7 +31,7 @@ rule docker_VC:
     params:
         container=config.get("docker").get("ctat").get("container"),
         path=config.get("docker").get("ctat").get("path"),
-        results_dir=config.get("paths").get("results_dir"),
+        results_dir=lambda wildcards, output: return_res_dir(output, elements=3),
         ctat_path=config.get("resources").get("ctat_path"),
         fq_path=lambda wildcards, input: os.path.dirname(input.read1),
         r1_name=lambda wildcards, input: os.path.basename(input.read2),

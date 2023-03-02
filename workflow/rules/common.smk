@@ -6,9 +6,6 @@ import multiprocessing
 from snakemake.utils import validate
 
 
-# report: "../report/workflow.rst"
-
-
 validate(config, schema="../schemas/config.schema.yaml")
 
 
@@ -42,6 +39,12 @@ def expand_filepath(filepath):
 def resolve_single_filepath(basepath, filename):
     return os.path.join(basepath, filename)
 
+
+def return_res_dir(output,elements=None):
+    path_list=output[0].split(os.sep)
+    path_list2=path_list[0:(len(path_list)-elements)]
+    res_path=os.path.join("/",os.path.join(*(path_list2)))
+    return res_path
 
 ## functions for system resources
 def cpu_count():
