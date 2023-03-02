@@ -50,7 +50,15 @@ properties:
     type: object
     properties:
       ctat:
-        type: string
+        type: object
+        properties:
+          container:
+            type: string
+          path:
+            type: string
+        required:
+          - container
+          - path
 
 required:
   - samples

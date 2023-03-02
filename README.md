@@ -26,7 +26,7 @@ You can perform the pipeline deploy defining a directory `my_dest_dir` for analy
 ```bash
 snakedeploy deploy-workflow https://github.com/massiddamt/rna_vc_docker.git 
                     my_desd_dir 
-                    --tag v1.0
+                    --tag v1.0.1
 ```
 To run the pipeline, go inside the deployed pipeline folder and use the command:
 ```bash

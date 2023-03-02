@@ -1,12 +1,20 @@
+import os
 rule pull_docker_VC:
     output:
         touch(resolve_results_filepath(
             config.get("paths").get("results_dir"),"ctat_container.pull.done"))
     params:
-        container=config.get("docker").get("ctat")
+        container=config.get("docker").get("ctat").get("container")
+    log:
+        resolve_results_filepath(
+            config.get("paths").get("results_dir"),"logs/docker/pull_docker.log")
+    conda:
+        resolve_single_filepath(
+            config.get("paths").get("workdir"),"workflow/envs/bash.yaml")
     message: "Downloading the following Docker container: {params.container}."
     shell:
         "docker pull {params.container} "
+        ">& {log} "
 
 
 rule docker_VC:
@@ -21,18 +29,21 @@ rule docker_VC:
         resolve_results_filepath(
             config.get("paths").get("results_dir"),"variant_calling/{sample}/{sample}.vcf.gz")
     params:
-        container=config.get("docker").get("ctat"),
+        container=config.get("docker").get("ctat").get("container"),
+        path=config.get("docker").get("ctat").get("path"),
         results_dir=config.get("paths").get("results_dir"),
         ctat_path=config.get("resources").get("ctat_path"),
-        fq_path=resolve_results_filepath(
-            config.get("paths").get("results_dir"),"reads/trimmed/"),
-        r1_name="{sample}-R1-trimmed.fq.gz",
-        r2_name="{sample}-R2-trimmed.fq.gz",
+        fq_path=lambda wildcards, input: os.path.dirname(input.read1),
+        r1_name=lambda wildcards, input: os.path.basename(input.read2),
+        r2_name=lambda wildcards, input: os.path.basename(input.read1),
         outprefix="variant_calling/{sample}",
         sample_id="{sample}"
     log:
         resolve_results_filepath(
             config.get("paths").get("results_dir"),"logs/docker_vc/{sample}.log")
+    conda:
+        resolve_single_filepath(
+            config.get("paths").get("workdir"),"workflow/envs/bash.yaml")
     threads: conservative_cpu_count(reserve_cores=1, max_cores=10)
     resources:
         tmpdir=config.get("paths").get("tmp_dir")
@@ -42,7 +53,7 @@ rule docker_VC:
         "-v {params.ctat_path}:/ctat_genome_lib_build_dir "
         "-v {params.fq_path}:/reads --rm "
         "{params.container} "
-        "/usr/local/src/ctat-mutations/ctat_mutations "
+        "{params.path} "
         "--left /reads/{params.r1_name} "
         "--right /reads/{params.r2_name} "
         "--genome_lib_dir /ctat_genome_lib_build_dir "

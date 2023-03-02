@@ -4,6 +4,12 @@ rule merge_read1_fastq:
     output:
         resolve_results_filepath(
             config.get("paths").get("results_dir"),"reads/untrimmed/merged/{sample}-R1.fq.gz")
+    log:
+        resolve_results_filepath(
+            config.get("paths").get("results_dir"),"logs/merge_fq/{sample}_R1.log")
+    conda:
+        resolve_single_filepath(
+            config.get("paths").get("workdir"),"workflow/envs/bash.yaml")
     script:
         resolve_single_filepath(
             config.get("paths").get("workdir"), "workflow/scripts/merge_fastq.py"
@@ -16,6 +22,12 @@ rule merge_read2_fastq:
     output:
         resolve_results_filepath(
             config.get("paths").get("results_dir"),"reads/untrimmed/merged/{sample}-R2.fq.gz")
+    log:
+        resolve_results_filepath(
+            config.get("paths").get("results_dir"),"logs/merge_fq/{sample}_R2.log")
+    conda:
+        resolve_single_filepath(
+            config.get("paths").get("workdir"),"workflow/envs/bash.yaml")
     script:
         resolve_single_filepath(
             config.get("paths").get("workdir"), "workflow/scripts/merge_fastq.py"
@@ -37,8 +49,7 @@ rule trimming:
             config.get("paths").get("results_dir"),"reads/trimmed/{sample}-R2.fq.gz_trimming_report.txt")
     params:
         extra=config.get("params").get("trim_galore").get("arguments"),
-        outdir=resolve_results_filepath(
-            config.get("paths").get("results_dir"),"reads/trimmed/"),
+        outdir=lambda wildcards, output: os.path.dirname(output.read1),
         qc_dir=resolve_results_filepath(
             config.get("paths").get("results_dir"),"qc/fastqc")
     log:

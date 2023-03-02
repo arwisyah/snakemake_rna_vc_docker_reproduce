@@ -12,7 +12,9 @@ params:
 
 
 docker:
-    ctat: "trinityctat/ctat_mutations:3.3.1"
+    ctat:
+        container: "trinityctat/ctat_mutations:3.3.1"
+        path: "/usr/local/src/ctat-mutations/ctat_mutations"
 
 
 paths:
