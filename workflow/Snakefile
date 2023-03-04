@@ -16,7 +16,8 @@ include: "rules/variant_calling.smk"
 
 ##### local rules #####
 localrules:
-    all
+    all,
+
 
 ##### target rules #####
 rule all:
@@ -27,8 +28,9 @@ rule all:
                 "variant_calling/{sample.sample}/{sample.sample}.vcf.gz",
             ),
             sample=samples.reset_index().itertuples(),
-        )
-    threads: conservative_cpu_count(reserve_cores=2,max_cores=99)
+        ),
+    threads: conservative_cpu_count(reserve_cores=2, max_cores=99)
     resources:
-        tmpdir=config.get("paths").get("tmp_dir")
-    message: "Concluding the workflow!"
+        tmpdir=config.get("paths").get("tmp_dir"),
+    message:
+        "Concluding the workflow!"

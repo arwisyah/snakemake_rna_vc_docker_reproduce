@@ -1,17 +1,25 @@
 import os
+
+
 rule pull_docker_VC:
     output:
-        touch(resolve_results_filepath(
-            config.get("paths").get("results_dir"),"ctat_container.pull.done"))
+        touch(
+            resolve_results_filepath(
+                config.get("paths").get("results_dir"), "ctat_container.pull.done"
+            )
+        ),
     params:
-        container=config.get("docker").get("ctat").get("container")
+        container=config.get("docker").get("ctat").get("container"),
     log:
         resolve_results_filepath(
-            config.get("paths").get("results_dir"),"logs/docker/pull_docker.log")
+            config.get("paths").get("results_dir"), "logs/docker/pull_docker.log"
+        ),
     conda:
         resolve_single_filepath(
-            config.get("paths").get("workdir"),"workflow/envs/bash.yaml")
-    message: "Downloading the following Docker container: {params.container}."
+            config.get("paths").get("workdir"), "workflow/envs/bash.yaml"
+        )
+    message:
+        "Downloading the following Docker container: {params.container}."
     shell:
         "docker pull {params.container} "
         ">& {log} "
@@ -20,14 +28,21 @@ rule pull_docker_VC:
 rule docker_VC:
     input:
         read1=resolve_results_filepath(
-            config.get("paths").get("results_dir"),"reads/trimmed/{sample}-R1-trimmed.fq.gz"),
+            config.get("paths").get("results_dir"),
+            "reads/trimmed/{sample}-R1-trimmed.fq.gz",
+        ),
         read2=resolve_results_filepath(
-            config.get("paths").get("results_dir"),"reads/trimmed/{sample}-R2-trimmed.fq.gz"),
+            config.get("paths").get("results_dir"),
+            "reads/trimmed/{sample}-R2-trimmed.fq.gz",
+        ),
         docker=resolve_results_filepath(
-            config.get("paths").get("results_dir"),"ctat_container.pull.done")
+            config.get("paths").get("results_dir"), "ctat_container.pull.done"
+        ),
     output:
         resolve_results_filepath(
-            config.get("paths").get("results_dir"),"variant_calling/{sample}/{sample}.vcf.gz")
+            config.get("paths").get("results_dir"),
+            "variant_calling/{sample}/{sample}.vcf.gz",
+        ),
     params:
         container=config.get("docker").get("ctat").get("container"),
         path=config.get("docker").get("ctat").get("path"),
@@ -37,17 +52,20 @@ rule docker_VC:
         r1_name=lambda wildcards, input: os.path.basename(input.read2),
         r2_name=lambda wildcards, input: os.path.basename(input.read1),
         outprefix="variant_calling/{sample}",
-        sample_id="{sample}"
+        sample_id="{sample}",
     log:
         resolve_results_filepath(
-            config.get("paths").get("results_dir"),"logs/docker_vc/{sample}.log")
+            config.get("paths").get("results_dir"), "logs/docker_vc/{sample}.log"
+        ),
     conda:
         resolve_single_filepath(
-            config.get("paths").get("workdir"),"workflow/envs/bash.yaml")
+            config.get("paths").get("workdir"), "workflow/envs/bash.yaml"
+        )
     threads: conservative_cpu_count(reserve_cores=1, max_cores=10)
     resources:
-        tmpdir=config.get("paths").get("tmp_dir")
-    message: "Running Docker container for Variant Calling with {threads} threads for the following files {input.read1}{input.read2}."
+        tmpdir=config.get("paths").get("tmp_dir"),
+    message:
+        "Running Docker container for Variant Calling with {threads} threads for the following files {input.read1}{input.read2}."
     shell:
         "docker run -v {params.results_dir}:/data "
         "-v {params.ctat_path}:/ctat_genome_lib_build_dir "
