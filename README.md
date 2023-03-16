@@ -1,5 +1,6 @@
 # Snakemake workflow: RNA VariantCalling Docker
 [![Snakemake](https://img.shields.io/badge/snakemake-≥7.18.1-brightgreen.svg)](https://snakemake.bitbucket.io)
+[![DOI](https://zenodo.org/badge/608259961.svg)](https://zenodo.org/badge/latestdoi/608259961)
 
 This workflow performs variant calling and annotation for bulk RNA-Seq samples.
 
