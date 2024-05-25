@@ -1,35 +1,83 @@
-# Snakemake workflow: RNA VariantCalling Docker
-[![Snakemake](https://img.shields.io/badge/snakemake-≥7.18.1-brightgreen.svg)](https://snakemake.bitbucket.io)
-[![DOI](https://zenodo.org/badge/608259961.svg)](https://zenodo.org/badge/latestdoi/608259961)
+# RNA-Seq Workflow Execution Guide
 
-This workflow performs variant calling and annotation for bulk RNA-Seq samples.
+## Step 1: Install Conda
 
-## Authors
+```bash
+# Download Miniconda installer
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
 
-* [Matteo Massidda](https://github.com/massiddamt), University of Sassari
+# Run the installer script and install Miniconda in the home directory
+bash Miniconda3-latest-Linux-x86_64.sh -b -p $HOME/miniconda
 
-## Usage
-
-The usage of this workflow is described in the [Snakemake Workflow Catalog](https://snakemake.github.io/snakemake-workflow-catalog?usage=massiddamt/rna_vc_docker).
-
-If you use this workflow in a paper, don't forget to give credits to the authors by citing the URL of this (original) repository and its DOI (see above).
-
-## INSTRUCTIONS
-Create a virtual environment with the command:
-```commandline
-mamba create -c bioconda -c conda-forge --name snakemake snakemake=7.18.1 snakedeploy
+# Activate Conda
+source $HOME/miniconda/etc/profile.d/conda.sh
 ```
-and activate it:
-```commandline
+
+## Step 2: Install Mamba
+
+```bash
+# Use Conda to install Mamba
+conda install -y -c conda-forge mamba
+```
+
+## Step 3: Install Snakemake and Snakedeploy
+
+```bash
+# Create a Conda environment named "snakemake" and install Snakemake and Snakedeploy
+mamba create -y -c conda-forge -c bioconda --name snakemake snakemake snakedeploy
+
+# Activate the "snakemake" environment
 conda activate snakemake
 ```
-You can perform the pipeline deploy defining a directory `my_dest_dir` for analysis output and a pipeline tag for a specific version:
+
+## Step 4: Download data files
+
 ```bash
-snakedeploy deploy-workflow https://github.com/massiddamt/rna_vc_docker.git 
-                    my_desd_dir 
-                    --tag v1.0.2
+# Install SRA tools to download the files
+conda install -c bioconda sra-tools
+
+# Download .sra files
+prefetch SRR390728
+prefetch SRR390729
+
+# Convert the downloaded .sra files into fastq files
+fastq-dump --split-files SRR390728
+fastq-dump --split-files SRR390729
 ```
-To run the pipeline, go inside the deployed pipeline folder and use the command:
+
+## Step 5: Prepare input files
+
+1. Change units.tsv file into:
+
+```
+sample	unit	fq1	fq2
+SRR390728	unit1	/workspace/rna_vc_docker/SRR390728_1.fastq	/workspace/rna_vc_docker/SRR390728_2.fastq
+SRR390729	unit2	/workspace/rna_vc_docker/SRR390729_1.fastq	/workspace/rna_vc_docker/SRR390729_2.fastq
+```
+
+2. Change samples.tsv file into:
+
+```
+sample	odp	units	condition	patient
+SRR390728	100	unit1	T	pat_1
+SRR390729	100	unit2	T	pat_2
+```
+
+## Step 6: Configure workflow
+
+Update paths in the `config.yaml` file:
+
+```yaml
+paths:
+    workdir: "/workspace/rna_vc_docker"
+    results_dir: "/workspace/rna_vc_docker/results"
+    tmp_dir: "/workspace/rna_vc_docker/tmp"
+```
+
+## Step 7: Run the workflow
+
 ```bash
-snakemake --use-conda -p --cores all
+snakemake --cores all --use-conda
 ```
+
+Finally, the result will be saved at `/workspace/rna_vc_docker/results`.
