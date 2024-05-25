@@ -1,4 +1,3 @@
 sample	unit	fq1	fq2
-SRR7876818	HSQ1008_141.L005.SRR7876818	test_data/SRR7876818.L005.R1.fq.gz	test_data/SRR7876818.L005.R2.fq.gz
-SRR7876818	HSQ1008_141.L006.SRR7876818	test_data/SRR7876818.L005.R1.fq.gz	test_data/SRR7876818.L005.R2.fq.gz
-SRR7876819	HSQ1008_141.L005.SRR7876819	test_data/SRR7876819.L005.R1.fq.gz	test_data/SRR7876819.L005.R2.fq.gz
+SRR390728	unit1	/workspace/rna_vc_docker/SRR390728_1.fastq	/workspace/rna_vc_docker/SRR390728_2.fastq
+SRR390729	unit2	/workspace/rna_vc_docker/SRR390729_1.fastq	/workspace/rna_vc_docker/SRR390729_2.fastq

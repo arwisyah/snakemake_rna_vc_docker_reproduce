@@ -18,6 +18,6 @@ docker:
 
 
 paths:
-    workdir: "/path/to/workdir"
-    results_dir: "/path/to/results_dir"
-    tmp_dir: "/path/to/tmp_dir"
+    workdir: "/workspace/rna_vc_docker"
+    results_dir: "/workspace/rna_vc_docker/results"
+    tmp_dir: "/workspace/rna_vc_docker/tmp"
