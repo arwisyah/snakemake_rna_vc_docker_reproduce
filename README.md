@@ -1,10 +1,10 @@
 # Snakemake RNA VC docker Workflow Execution
 
-This is how to reproduce workflow from https://github.com/massiddamt/rna_vc_docker
-using SRR390728 and SRR390729
+This is how to reproduce the workflow from [massiddamt/rna_vc_docker](https://github.com/massiddamt/rna_vc_docker) using SRR390728 and SRR390729.
+
 NCBI metadata:
-https://www.ncbi.nlm.nih.gov/Traces/index.html?view=run_browser&acc=SRR390728&display=metadata
-https://www.ncbi.nlm.nih.gov/Traces/index.html?view=run_browser&acc=SRR390729&display=metadata
+- [SRR390728](https://www.ncbi.nlm.nih.gov/Traces/index.html?view=run_browser&acc=SRR390728&display=metadata)
+- [SRR390729](https://www.ncbi.nlm.nih.gov/Traces/index.html?view=run_browser&acc=SRR390729&display=metadata)
 
 ## Step 1: Install Conda
 
