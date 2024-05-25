@@ -1,6 +1,6 @@
 # Snakemake RNA VC docker Workflow Execution
 
-This is how to reproduce the workflow from [massiddamt/rna_vc_docker](https://github.com/massiddamt/rna_vc_docker) using SRR390728 and SRR390729.
+This is how to reproduce the workflow from [massiddamt/rna_vc_docker](https://github.com/massiddamt/rna_vc_docker) on gitpod using SRR390728 and SRR390729.
 
 NCBI metadata:
 - [SRR390728](https://www.ncbi.nlm.nih.gov/Traces/index.html?view=run_browser&acc=SRR390728&display=metadata)
@@ -87,3 +87,5 @@ snakemake --cores all --use-conda
 ```
 
 Finally, the result will be saved at `/workspace/rna_vc_docker/results`.
+
+Note: The data and result files cant be pushed to github from gitpod because of filesize limitation.
